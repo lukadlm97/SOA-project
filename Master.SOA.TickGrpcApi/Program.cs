@@ -1,11 +1,7 @@
+using Master.SOA.Domain.Configurations;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Master.SOA.TickGrpcApi
 {
@@ -20,6 +16,11 @@ namespace Master.SOA.TickGrpcApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureServices((context, services) =>
+                    {
+                        services.AddOptions();
+                        services.Configure<ConfigSettings>(context.Configuration.GetSection("Database"));
+                    });
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseUrls("http://localhost:45678", "https://localhost:45679");
                 });

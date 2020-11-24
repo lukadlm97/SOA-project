@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Master.SOA.Domain\Master.SOA.Domain.csproj" />
     <ProjectReference Include="..\Master.SOA.GrpcProtoLibrary\Master.SOA.GrpcProtoLibrary.csproj" />
   </ItemGroup>
 

@@ -1,20 +1,21 @@
 ﻿using Grpc.Net.Client;
-using Master.SOA.GrpcProtoLibrary.Protos.Greet;
+using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
+using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
 using System;
 using System.Threading.Tasks;
 
 namespace Master.SOA.CoreClient
 {
-    class Program
+    internal class Program
     {
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
-            var httpsClient = new Greeter.GreeterClient(channel);
+            var httpsClient = new Ticker.TickerClient(channel);
 
-            var reply = httpsClient.SayHello(new HelloRequest { Name = "Luka" });
+            var reply = await httpsClient.GetTickAsync(new TickSearchRequest { TickId = 1 });
 
-            Console.WriteLine(reply.Message);
+            Console.WriteLine(reply.Symbol);
 
             Console.WriteLine("Press any key to close app...");
             Console.ReadLine();

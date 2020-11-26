@@ -5,10 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.33.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Master.SOA.BusinessLogic\Master.SOA.BusinessLogic.csproj" />
     <ProjectReference Include="..\Master.SOA.Domain\Master.SOA.Domain.csproj" />
     <ProjectReference Include="..\Master.SOA.GrpcProtoLibrary\Master.SOA.GrpcProtoLibrary.csproj" />
   </ItemGroup>

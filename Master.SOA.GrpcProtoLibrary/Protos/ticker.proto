@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/timestamp.proto";
 
 option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Ticker";
 
@@ -30,10 +31,11 @@ message TickReply{
 	DecimalValue high=3;
 	DecimalValue low=4;
 	string symbol=5;
+	 google.protobuf.Timestamp time = 6;
 }
 
 message TickSearchRequest{
-	int32 instrumentId=1;
+	int32 tickId=1;
 }
 
 message SymbolSearchRequest{

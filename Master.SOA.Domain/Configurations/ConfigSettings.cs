@@ -2,7 +2,7 @@
 {
     public class ConfigSettings
     {
-        public string DbConnectionString { get; set; }
+        public string ConnectionString { get; set; }
         public string UniqGuid { get; set; }
     }
 }

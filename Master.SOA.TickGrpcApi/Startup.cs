@@ -28,6 +28,7 @@ namespace Master.SOA.TickGrpcApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<TickerService>();
             });
         }
     }

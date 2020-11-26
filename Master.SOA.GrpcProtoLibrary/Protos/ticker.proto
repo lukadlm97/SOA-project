@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Ticker";
+
+
+package ticker;
+
+
+service Ticker {
+	rpc GetTick(TickSearchRequest) returns (TickReply);
+	rpc GetTicks(EmptyRequest) returns (MultipleTicksReply);
+	rpc GetStreamOfTicks(EmptyRequest) returns (stream TickReply);
+	rpc DeleteTick(TickSearchRequest) returns (TickChangesReply);
+	rpc CreateTick(TickToAdd) returns (TickChangesReply);
+	rpc UpdateTick(TickToAdd) returns (TickChangesReply);
+	rpc ClientStreaming(stream TickToAdd) returns (TickChangesReply);
+	rpc GetTickForSymbol(SymbolSearchRequest) returns (MultipleTicksReply);
+}
+
+message EmptyRequest{
+}
+
+message MultipleTicksReply{
+	repeated TickReply ticks = 1;
+}
+
+message TickReply{
+	DecimalValue open=1;
+	DecimalValue close=2;
+	DecimalValue high=3;
+	DecimalValue low=4;
+	string symbol=5;
+}
+
+message TickSearchRequest{
+	int32 instrumentId=1;
+}
+
+message SymbolSearchRequest{
+	int32 symbolId=1;
+}
+
+message TickToAdd{
+	int32 instrumentId=1;
+	DecimalValue open=2;
+	DecimalValue close=3;
+	DecimalValue high=4;
+	DecimalValue low=5;
+	int32 symbol=6;
+}
+
+// Custom types
+// Name "DecimalValue" prevents conflict with C# Decimal type
+message DecimalValue {
+
+  // The whole units of the amount.
+  int64 units = 1;
+
+  // Number of nano (10^-9) units of the amount.
+  // The value must be between -999,999,999 and +999,999,999 inclusive.
+  // If `units` is positive, `nanos` must be positive or zero.
+  // If `units` is zero, `nanos` can be positive, zero, or negative.
+  // If `units` is negative, `nanos` must be negative or zero.
+  // For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
+  int32 nanos = 2;
+}
+
+message TickChangesReply{
+  StatusCode code=1;
+  string message=2;
+}
+
+enum StatusCode{
+	SUCCESS=0;
+	ERROR=1;
+}

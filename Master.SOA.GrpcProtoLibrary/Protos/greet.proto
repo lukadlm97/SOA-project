@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Greet";
+option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Greeter";
 
 
 package greet;
@@ -20,3 +20,4 @@ message HelloRequest {
 message HelloReply {
   string message = 1;
 }
+

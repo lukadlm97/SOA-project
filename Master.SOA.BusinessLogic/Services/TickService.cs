@@ -17,23 +17,28 @@ namespace Master.SOA.BusinessLogic.Services
         public TickService(IDataRepository<TickDto> repository, IMapper mapper)
         => (_repository, _mapper) = (repository, mapper);
 
-        public Task<bool> Create(Tick obj)
+        public async Task<bool> Create(Tick obj)
         {
-            throw new NotImplementedException();
+            return await _repository.Create(_mapper.Map<TickDto>(obj));
         }
 
-        public Task<bool> Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            throw new NotImplementedException();
+            return await _repository.Delete(id);
         }
 
-        public async Task<IEnumerable<Tick>> GetAll()
+        public async Task<IEnumerable<Tick>> GetAll(int? count=null)
         {
             var ticks = await _repository.GetAll();
 
-            var completed = _mapper.Map<IEnumerable<Tick>>(ticks);
+            if (count == null)
+            {
+                return _mapper.Map<IEnumerable<Tick>>(ticks);
+            }
 
-            return completed;
+            var selected = ticks.Take((int)count);
+
+            return _mapper.Map<IEnumerable<Tick>>(selected);
         }
 
         public async Task<Tick> GetById(int id)
@@ -45,9 +50,9 @@ namespace Master.SOA.BusinessLogic.Services
             return _mapper.Map<Tick>(quota);
         }
 
-        public Task<bool> Update(int id, Tick obj)
+        public async Task<bool> Update(int id, Tick obj)
         {
-            throw new NotImplementedException();
+            return await _repository.Update(id, _mapper.Map<TickDto>(obj));
         }
     }
 }

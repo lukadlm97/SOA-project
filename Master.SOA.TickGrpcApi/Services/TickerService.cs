@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using Master.SOA.BusinessLogic.Contracts;
 using Master.SOA.Domain.Models;
@@ -29,5 +30,45 @@ namespace Master.SOA.TickGrpcApi.Services
 
             return _mapper.Map<TickReply>(tick);
         }
+
+        public override async Task<MultipleTicksReply> GetTicks(MultipleTicksRequest request, ServerCallContext context)
+        {
+            _logger.LogInformation("Request GetQuotes received !!!");
+
+            IEnumerable<Tick> ticks = null;
+
+            switch (request.RequestCase)
+            {
+                case MultipleTicksRequest.RequestOneofCase.EmptyRequest:
+                    ticks = await _service.GetAll(null);
+                    break;
+                case MultipleTicksRequest.RequestOneofCase.TicksRequested:
+                    ticks = await _service.GetAll(request.TicksRequested.Count);
+                    break;
+                default:
+                    ticks = null;
+                    break;
+            }
+            if (ticks == null)
+                return new MultipleTicksReply { Code = GrpcProtoLibrary.Protos.Ticker.StatusCode.Error };
+
+            var destinationTicks = ticks.Select(x => _mapper.Map<TickReply>(x));
+
+
+            return new MultipleTicksReply 
+            { 
+                Code = GrpcProtoLibrary.Protos.Ticker.StatusCode.Success, 
+                Ticks = 
+                { 
+                    _mapper.Map<RepeatedField<TickReply>>(destinationTicks)
+                }
+            };
+        }
+
+        public override Task<TickChangesReply> CreateTick(TickToAdd request, ServerCallContext context)
+        {
+            return base.CreateTick(request, context);
+        }
+
     }
 }

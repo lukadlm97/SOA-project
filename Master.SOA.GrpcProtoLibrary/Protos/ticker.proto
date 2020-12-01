@@ -9,7 +9,7 @@ package ticker;
 
 service Ticker {
 	rpc GetTick(TickSearchRequest) returns (TickReply);
-	rpc GetTicks(EmptyRequest) returns (MultipleTicksReply);
+	rpc GetTicks(MultipleTicksRequest) returns (MultipleTicksReply);
 	rpc GetStreamOfTicks(EmptyRequest) returns (stream TickReply);
 	rpc DeleteTick(TickSearchRequest) returns (TickChangesReply);
 	rpc CreateTick(TickToAdd) returns (TickChangesReply);
@@ -18,11 +18,23 @@ service Ticker {
 	rpc GetTickForSymbol(SymbolSearchRequest) returns (MultipleTicksReply);
 }
 
+message MultipleTicksRequest{
+	oneof request{
+		EmptyRequest emptyRequest=1;
+		TicksForRequest ticksRequested = 2;
+	}
+}
+
+message TicksForRequest{
+	int32 count = 1;
+}
+
 message EmptyRequest{
 }
 
 message MultipleTicksReply{
 	repeated TickReply ticks = 1;
+	StatusCode code=2;
 }
 
 message TickReply{
@@ -31,7 +43,8 @@ message TickReply{
 	DecimalValue high=3;
 	DecimalValue low=4;
 	string symbol=5;
-	 google.protobuf.Timestamp time = 6;
+	google.protobuf.Timestamp time = 6;
+	StatusCode code=7;
 }
 
 message TickSearchRequest{

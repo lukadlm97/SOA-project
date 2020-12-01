@@ -7,7 +7,7 @@ namespace Master.SOA.BusinessLogic.Contracts
 {
     public interface IDataService<T>
     {
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAll(int? count);
         Task<T> GetById(int id);
         Task<bool> Create(T obj);
         Task<bool> Update(int id, T obj);

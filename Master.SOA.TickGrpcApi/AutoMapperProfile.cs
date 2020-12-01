@@ -19,6 +19,13 @@ namespace Master.SOA.TickGrpcApi
                 .ForMember(dest => dest.LowPrice, opt => opt.MapFrom(src => src.Low))
                 .ReverseMap();
 
+            CreateMap<TickToAdd, Tick>()
+                .ForPath(dest => dest.Instrument.Id, opt => opt.MapFrom(src => src.Symbol))
+                .ForMember(dest => dest.Open, opt => opt.MapFrom(src => decimal.ToDouble(src.Open)))
+                .ForMember(dest => dest.Close, opt => opt.MapFrom(src => decimal.ToDouble(src.Close)))
+                .ForMember(dest => dest.High, opt => opt.MapFrom(src => decimal.ToDouble(src.High)))
+                .ForMember(dest => dest.Low, opt => opt.MapFrom(src => decimal.ToDouble(src.Low)));
+
             CreateMap<Tick, TickReply>().ForMember(dest => dest.Open, opt => opt.MapFrom(src => (decimal)src.Open))
                 .ForMember(dest => dest.Close, opt => opt.MapFrom(src => (decimal)src.Close))
                 .ForMember(dest => dest.High, opt => opt.MapFrom(src => (decimal)src.High))

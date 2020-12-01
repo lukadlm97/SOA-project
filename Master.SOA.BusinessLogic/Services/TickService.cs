@@ -47,6 +47,9 @@ namespace Master.SOA.BusinessLogic.Services
 
             var quota = quotas.FirstOrDefault(x => x.Id == id);
 
+            if (quota == null)
+                return null;
+
             return _mapper.Map<Tick>(quota);
         }
 

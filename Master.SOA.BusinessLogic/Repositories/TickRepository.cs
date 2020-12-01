@@ -105,7 +105,7 @@ namespace Master.SOA.BusinessLogic.Repositories
         public async Task<bool> Update(int id, TickDto obj)
         {
             var sql = @"UPDATE [Master.SOA].[dbo].[Tick]
-                        SET OpenPrice = @openValue, ClosePrice = @closeValue, HighPrice = @highValue, LowPrice = @lowValue,SymbolId=@symbolValue
+                        SET OpenPrice = @openValue, ClosePrice = @closeValue, HighPrice = @highValue, LowPrice = @lowValue,InstrumentId=@symbolValue
                         WHERE Id = @Id";
 
             var parametars = new DynamicParameters();

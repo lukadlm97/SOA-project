@@ -1,8 +1,10 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
+using Master.SOA.CoreClient.Helpers;
 using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Master.SOA.CoreClient
@@ -23,9 +25,9 @@ namespace Master.SOA.CoreClient
                     High = (DecimalValue)5.6238m,
                     Low = (DecimalValue)5.6224m,
                     Symbol = 2
-                });*/
-
-            await GetTicksForQuota(httpsClient, 1);
+                });
+            await GetTicksForQuota(httpsClient, 1);*/
+            await ClientStreaming(httpsClient, 1);
 
             Console.WriteLine("Press any key to close app...");
             Console.ReadLine();
@@ -125,6 +127,46 @@ namespace Master.SOA.CoreClient
                 WriteSingleTick(tick);
             }
         }
+
+        static async Task ClientStreaming(Ticker.TickerClient client,int symbolId)
+        {
+            using(var call = client.ClientStreaming())
+            {
+                for(int i = 0; i < 5; i++)
+                {
+                    var request = GenerateRequest(symbolId);
+                    await call.RequestStream.WriteAsync(request);
+                    await Task.Delay(3000);
+                }
+                await call.RequestStream.CompleteAsync();
+
+                var response = await call;
+
+                Console.WriteLine(response.Message);
+            }
+
+        }
+        public static TickToAdd GenerateRequest(int symbolId)
+        {
+            var array = TickResurseGenerator.CreateArray(4).AsEnumerable<double>();
+            var high = array.Max<double>();
+            var low = array.Min<double>();
+            var open = TickResurseGenerator.GetRandomNumber(low, high);
+            var close = TickResurseGenerator.GetRandomNumber(low, high);
+
+
+
+            return new TickToAdd
+            {
+                Close = (DecimalValue)(decimal)close,
+                Open = (DecimalValue)(decimal)open,
+                Low = (DecimalValue)(decimal)low,
+                High = (DecimalValue)(decimal)high,
+                InstrumentId = 0,
+                Symbol = symbolId
+            };
+        }
+
 
         private static void WriteSingleTick(TickReply reply)
         {

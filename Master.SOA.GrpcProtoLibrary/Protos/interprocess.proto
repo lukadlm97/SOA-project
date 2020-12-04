@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Interprocess";
+
+
+package interprocess;
+
+// The greeting service definition.
+service InterprocessCommunication {
+  // Sends a greeting
+  rpc SayGuid (HelloRequest) returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string guid = 1;
+  string role = 2;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  StatusCode status = 1;
+}
+
+
+enum StatusCode{
+	SUCCESS=0;
+	ERROR=1;
+}
+

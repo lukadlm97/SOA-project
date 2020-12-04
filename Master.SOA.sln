@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.TickGrpcApi", "Master.SOA.TickGrpcApi\Master.SOA.TickGrpcApi.csproj", "{CBD39B1D-6737-4730-B4F2-9EC7B08CDCA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Master.SOA.TickGrpcApi", "Master.SOA.TickGrpcApi\Master.SOA.TickGrpcApi.csproj", "{CBD39B1D-6737-4730-B4F2-9EC7B08CDCA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.Domain", "Master.SOA.Domain\Master.SOA.Domain.csproj", "{0213BEDF-01FE-4755-85F3-18DB776649F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Master.SOA.Domain", "Master.SOA.Domain\Master.SOA.Domain.csproj", "{0213BEDF-01FE-4755-85F3-18DB776649F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.GrpcProtoLibrary", "Master.SOA.GrpcProtoLibrary\Master.SOA.GrpcProtoLibrary.csproj", "{A5865FB2-F246-4853-A42F-664E4D00DDD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Master.SOA.GrpcProtoLibrary", "Master.SOA.GrpcProtoLibrary\Master.SOA.GrpcProtoLibrary.csproj", "{A5865FB2-F246-4853-A42F-664E4D00DDD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.BusinessLogic", "Master.SOA.BusinessLogic\Master.SOA.BusinessLogic.csproj", "{463431A3-2F88-4B77-9F7D-2A916E992F94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Master.SOA.BusinessLogic", "Master.SOA.BusinessLogic\Master.SOA.BusinessLogic.csproj", "{463431A3-2F88-4B77-9F7D-2A916E992F94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.CoreClient", "Master.SOA.CoreClient\Master.SOA.CoreClient.csproj", "{0520E10D-1F77-4B0E-A6AF-09DBC157B16F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Master.SOA.CoreClient", "Master.SOA.CoreClient\Master.SOA.CoreClient.csproj", "{0520E10D-1F77-4B0E-A6AF-09DBC157B16F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Master.SOA.AuthGrpcApi", "Master.SOA.AuthGrpcApi\Master.SOA.AuthGrpcApi.csproj", "{C706E04C-771E-4A61-8A65-AAF9CA51C52B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0520E10D-1F77-4B0E-A6AF-09DBC157B16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0520E10D-1F77-4B0E-A6AF-09DBC157B16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0520E10D-1F77-4B0E-A6AF-09DBC157B16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C706E04C-771E-4A61-8A65-AAF9CA51C52B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C706E04C-771E-4A61-8A65-AAF9CA51C52B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C706E04C-771E-4A61-8A65-AAF9CA51C52B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C706E04C-771E-4A61-8A65-AAF9CA51C52B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

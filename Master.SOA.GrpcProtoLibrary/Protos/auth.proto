@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option csharp_namespace = "Master.SOA.GrpcProtoLibrary.Protos.Auth";
+
+
+package auth;
+
+// The greeting service definition.
+service Auth {
+  // Sends a greeting
+  rpc LogIn (LogInRequest) returns (LogInReply);
+  rpc RegisterUser (RegisterRequest) returns (RegisterReply);
+  rpc UpdateUserRole (UpdateRoleRequest) returns (ChangeRoleReply);
+}
+
+// The request message containing the user's name.
+message LogInRequest {
+  string username = 1;
+  string password = 2;
+}
+
+// The request message containing the user's name.
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;
+}
+
+message UpdateRoleRequest {
+  string username = 1;
+  string adminUsername = 2;
+  string role = 3;
+}
+
+
+// The response message containing the greetings.
+message LogInReply {
+  string guidId = 1;
+  StatusCode code = 2;
+}
+
+// The response message containing the greetings.
+message RegisterReply {
+  StatusCode code = 1;
+  string message = 2;
+}
+
+// The response message containing the greetings.
+message ChangeRoleReply {
+  StatusCode code = 1;
+  string message = 2;
+}
+
+enum StatusCode{
+	SUCCESS=0;
+	ERROR=1;
+}
+
+

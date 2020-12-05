@@ -1,6 +1,7 @@
 ﻿using Grpc.Core;
 using Grpc.Net.Client;
 using Master.SOA.CoreClient.Helpers;
+using Master.SOA.GrpcProtoLibrary.Protos.Auth;
 using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
 using System;
@@ -13,9 +14,20 @@ namespace Master.SOA.CoreClient
     {
         private static async Task Main(string[] args)
         {
-            GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
-            var httpsClient = new Ticker.TickerClient(channel);
+           // GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
+           // var httpsClient = new Ticker.TickerClient(channel);
 
+            GrpcChannel authChannel = GrpcChannel.ForAddress("https://localhost:56790");
+            var httpsClient = new Auth.AuthClient(authChannel);
+
+            var token = await httpsClient.UpdateUserRoleAsync(new UpdateRoleRequest
+            {
+                AdminUsername = "admin",
+                Role = "PremiumUser",
+                Username = "u1"
+            });
+
+            Console.WriteLine(token.Code+"   :   "+token.Message);
             /*await UpdateTickHandling(httpsClient,
                 new TickToAdd
                 {
@@ -27,7 +39,7 @@ namespace Master.SOA.CoreClient
                     Symbol = 2
                 });
             await GetTicksForQuota(httpsClient, 1);*/
-            await ClientStreaming(httpsClient, 1);
+            //await ClientStreaming(httpsClient, 1);
 
             Console.WriteLine("Press any key to close app...");
             Console.ReadLine();

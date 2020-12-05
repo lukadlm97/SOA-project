@@ -9,10 +9,14 @@ namespace Master.SOA.AuthGrpcApi
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDbo>().ReverseMap();
+            CreateMap<User, UserDbo>()
+                .ReverseMap();
+            CreateMap<Role, RoleDbo>()
+               .ReverseMap();
             CreateMap<LogInRequest, User>();
             CreateMap<RegisterRequest, User>();
-            CreateMap<UpdateRoleRequest, User>().ForMember(dest => dest.Role.Name,opt=>opt.MapFrom(src => src.Role));
+            CreateMap<UpdateRoleRequest, User>()
+                .ForPath(dest => dest.Role.Name,opt => opt.MapFrom(src=>src.Role));
 
         }
 

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Master.SOA.AuthGrpcApi.GrpcApi;
 using Master.SOA.AuthGrpcApi.Models.Dbo;
 using Master.SOA.AuthGrpcApi.Repositories;
 using Master.SOA.AuthGrpcApi.Repositories.Contracts;
@@ -38,7 +39,7 @@ namespace Master.SOA.AuthGrpcApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<AuthService>();
+                endpoints.MapGrpcService<AuthGrpcService>();
             });
         }
     }

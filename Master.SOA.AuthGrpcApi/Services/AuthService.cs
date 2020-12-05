@@ -4,6 +4,7 @@ using Master.SOA.AuthGrpcApi.Models.Domain;
 using Master.SOA.AuthGrpcApi.Repositories.Contracts;
 using Master.SOA.AuthGrpcApi.Services.Contracts;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Master.SOA.AuthGrpcApi.Services
@@ -16,19 +17,46 @@ namespace Master.SOA.AuthGrpcApi.Services
         public AuthService(IAuthRepository<UserDbo> repository, IMapper mapper)
         => (_repository, _mapper) = (repository, mapper);
 
-        public Task<bool> ChangeRole(string adminName, string username, string role)
+        public async Task<bool> ChangeRole(string adminName, string username, string role)
         {
-            throw new NotImplementedException();
+            var users = await _repository.GetAll();
+
+            if (!users.Any(x => x.Username == adminName))
+                return false;
+
+            var id = users.FirstOrDefault(x => x.Username == username)?.Id;
+
+            if (id == null)
+                return false;
+
+            var user = new User
+            {
+                Role = new Role
+                {
+                    Name = role
+                }
+            };
+
+            return await _repository.Update((int)id, _mapper.Map<UserDbo>(user));
         }
 
-        public Task<string> LogIn(User obj)
+        public async Task<string> LogIn(User obj)
         {
-            throw new NotImplementedException();
+            var users = await _repository.GetAll();
+
+            var isSuccess = users.Any(x => x.Username == obj.Username && x.Password == obj.Password);
+
+            if (isSuccess)
+            {
+                return Guid.NewGuid().ToString();
+            }
+
+            return null;
         }
 
-        public Task<bool> Register(int id, User obj)
+        public async Task<bool> Register(User obj)
         {
-            throw new NotImplementedException();
+            return await _repository.Create(_mapper.Map<UserDbo>(obj));
         }
     }
 }

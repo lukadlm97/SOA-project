@@ -23,12 +23,7 @@ namespace Master.SOA.AuthGrpcApi.Repositories
 
         public async Task<bool> Create(UserDbo obj)
         {
-            var roles = await GetRoles();
-
-            var role = roles.FirstOrDefault(x => x.Name == obj.Role.Name)?.RoleId;
-
-            if (role == null)
-                obj.Role.RoleId = 2;
+            obj.Role=new RoleDbo { Id=2};
 
             var sql = @"insert into [Master.SOA.Auth].[dbo].[Users]
                         ([Username],[Password],[FirstName],[LastName],[RegisterDate],[RoleId])
@@ -42,7 +37,7 @@ namespace Master.SOA.AuthGrpcApi.Repositories
             dynamicParamteras.Add("@FirstName", obj.FirstName);
             dynamicParamteras.Add("@LastName", obj.LastName);
             dynamicParamteras.Add("@RegisterDate", DateTime.Now);
-            dynamicParamteras.Add("@RegisterDate", obj.Role.RoleId);
+            dynamicParamteras.Add("@RoleId", obj.Role.Id);
             
             try
             {
@@ -65,9 +60,12 @@ namespace Master.SOA.AuthGrpcApi.Repositories
 
         public async Task<IEnumerable<UserDbo>> GetAll()
         {
-            var sql = @"select TOP (1000) u.*,r.*
-                        from[Master.SOA.Auth].[dbo].[Users] u left join[Master.SOA.Auth].[dbo].[Roles] r 
-                        on(u.RoleId= r.RoleId)";
+            var roles = await GetRoles();
+
+            var sql = @"SELECT TOP (1000) u.*,r.*
+                        FROM [Master.SOA.Auth].[dbo].[Users] u 
+                        LEFT JOIN [Master.SOA.Auth].[dbo].[Roles] r 
+                        ON(u.RoleId= r.Id)";
 
             try
             {
@@ -79,9 +77,9 @@ namespace Master.SOA.AuthGrpcApi.Repositories
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                _logger.LogError("Error occurred while retrieving data from database");
+                _logger.LogError("Error occurred while retrieving data from database"+e.Message);
                 return null;
             }
         }
@@ -90,18 +88,20 @@ namespace Master.SOA.AuthGrpcApi.Repositories
         {
             var roles = await GetRoles();
 
-            var role = roles.FirstOrDefault(x => x.Name == obj.Role.Name)?.RoleId;
+            var role = roles.FirstOrDefault(x => x.Name == obj.Role.Name)?.Id;
 
             if (role == null)
-                obj.Role.RoleId = 2;
+                obj.Role.Id = 2;
+            else
+                obj.Role.Id = (int)role;
 
             var sql = @"update [Master.SOA.Auth].[dbo].[Users]
                         set [RoleId] = @RoleId
-                        where [UserId] = @UserId";
+                        where [Id] = @UserId";
 
             var parametars = new DynamicParameters();
             parametars.Add("@UserId", id);
-            parametars.Add("@RoleId", obj.Role.RoleId);
+            parametars.Add("@RoleId", obj.Role.Id);
 
             try
             {

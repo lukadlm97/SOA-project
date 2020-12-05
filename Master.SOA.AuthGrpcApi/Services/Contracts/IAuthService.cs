@@ -6,7 +6,7 @@ namespace Master.SOA.AuthGrpcApi.Services.Contracts
     public interface IAuthService
     {
         Task<string> LogIn(User obj);
-        Task<bool> Register(int id, User obj);
+        Task<bool> Register(User obj);
         Task<bool> ChangeRole (string adminName, string username,string role);
     }
 }

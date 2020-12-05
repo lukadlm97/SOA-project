@@ -1,12 +1,13 @@
+using AutoMapper;
+using Master.SOA.AuthGrpcApi.Models.Dbo;
+using Master.SOA.AuthGrpcApi.Repositories;
+using Master.SOA.AuthGrpcApi.Repositories.Contracts;
+using Master.SOA.AuthGrpcApi.Services;
+using Master.SOA.AuthGrpcApi.Services.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Master.SOA.AuthGrpcApi
 {
@@ -16,6 +17,13 @@ namespace Master.SOA.AuthGrpcApi
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGrpc();
+
+            services.AddSingleton<IAuthRepository<UserDbo>, AuthRepository>();
+            services.AddSingleton<IAuthService, AuthService>();
+
+            services.AddOptions();
+            services.AddAutoMapper(typeof(AutoMapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -30,10 +38,7 @@ namespace Master.SOA.AuthGrpcApi
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapGrpcService<AuthService>();
             });
         }
     }

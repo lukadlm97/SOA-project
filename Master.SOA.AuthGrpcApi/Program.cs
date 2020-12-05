@@ -1,5 +1,7 @@
+using Master.SOA.AuthGrpcApi.Models.Configurations;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,7 +22,12 @@ namespace Master.SOA.AuthGrpcApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureServices((context, services) =>
+                    {
+                        services.Configure<ConfigSettings>(context.Configuration.GetSection("Database"));
+                    });
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseUrls("http://localhost:56789", "https://localhost:56790");
                 });
     }
 }

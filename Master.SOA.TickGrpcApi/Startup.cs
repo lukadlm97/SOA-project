@@ -67,6 +67,7 @@ namespace Master.SOA.TickGrpcApi
                 endpoints.MapGrpcService<GreeterService>();
                 endpoints.MapGrpcService<TickerService>();
                 endpoints.MapGrpcService<InterProccessService>();
+                endpoints.MapGrpcService<HealthServiceImplementation>();
 
                 endpoints.MapGet("/generateJwtToken", context =>
                 {

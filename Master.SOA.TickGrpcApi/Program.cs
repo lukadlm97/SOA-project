@@ -5,6 +5,8 @@ using Master.SOA.BusinessLogic.Services;
 using Master.SOA.Domain.Configurations;
 using Master.SOA.Domain.DataTransferObjects;
 using Master.SOA.Domain.Models;
+using Master.SOA.TickGrpcApi.Helper;
+using Master.SOA.TickGrpcApi.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +34,9 @@ namespace Master.SOA.TickGrpcApi
                         services.AddSingleton<IAuthRepository, AuthRepository>();
                         services.AddSingleton<IAuthService, AuthService>();
                         services.AddAutoMapper(typeof(AutoMapperProfile));
+                        services.AddHealthChecks();
+                        services.AddSingleton<HealthServiceImplementation>();
+                        services.AddHostedService<StatusService>();
                     });
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseUrls("http://localhost:45678", "https://localhost:45679");

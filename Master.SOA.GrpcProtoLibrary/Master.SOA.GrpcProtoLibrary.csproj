@@ -7,6 +7,7 @@
   <ItemGroup>
     <None Remove="Protos\auth.proto" />
     <None Remove="Protos\greet.proto" />
+    <None Remove="Protos\health.proto" />
     <None Remove="Protos\interprocess.proto" />
     <None Remove="Protos\ticker.proto" />
   </ItemGroup>
@@ -24,6 +25,7 @@
 
   <ItemGroup>
     <Protobuf Include="Protos\auth.proto" />
+    <Protobuf Include="Protos\health.proto" />
     <Protobuf Include="Protos\interprocess.proto" />
     <Protobuf Include="Protos\ticker.proto" />
     <Protobuf Include="Protos\greet.proto" />

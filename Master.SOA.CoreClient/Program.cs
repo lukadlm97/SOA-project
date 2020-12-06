@@ -3,6 +3,7 @@ using Grpc.Net.Client;
 using Master.SOA.CoreClient.Helpers;
 using Master.SOA.GrpcProtoLibrary.Protos.Auth;
 using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
+using Master.SOA.GrpcProtoLibrary.Protos.Health;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
 using System;
 using System.Linq;
@@ -23,34 +24,42 @@ namespace Master.SOA.CoreClient
             GrpcChannel authChannel = GrpcChannel.ForAddress("https://localhost:56790");
             var httpsClient = new Auth.AuthClient(authChannel);
 
-            var reply = await httpsClient.LogInAsync(new LogInRequest { Username = "admin", Password = "admin" });
-            var replyUser = await httpsClient.LogInAsync(new LogInRequest { Username = "k1", Password = "k2" });
+            var healthChecker = new Health.HealthClient(channel);
 
-            var tokenAdmin =
-                await Authenticate(reply.Role);
+            string serviceName = "Ticker";
 
-            var tokenUser = await Authenticate(replyUser.Role);
+            var result = await healthChecker.CheckAsync(new HealthCheckRequest { Service = serviceName });
+
+            Console.WriteLine(result?.Status);
+            /*  var reply = await httpsClient.LogInAsync(new LogInRequest { Username = "admin", Password = "admin" });
+              var replyUser = await httpsClient.LogInAsync(new LogInRequest { Username = "k1", Password = "k2" });
+
+              var tokenAdmin =
+                  await Authenticate(reply.Role);
+
+              var tokenUser = await Authenticate(replyUser.Role);
 
 
-            Console.WriteLine(tokenAdmin);
-            Console.WriteLine(tokenUser);
+              Console.WriteLine(tokenAdmin);
+              Console.WriteLine(tokenUser);
 
-            await ClientStreaming(httpsClientTicker, 1, tokenUser);
+              await ClientStreaming(httpsClientTicker, 1, tokenUser);
 
 
 
-            /*await UpdateTickHandling(httpsClient,
-                new TickToAdd
-                {
-                    InstrumentId = 1,
-                    Close = (DecimalValue)5.6234m,
-                    Open = (DecimalValue)5.6225m,
-                    High = (DecimalValue)5.6238m,
-                    Low = (DecimalValue)5.6224m,
-                    Symbol = 2
-                });
-            await GetTicksForQuota(httpsClient, 1);*/
+              /*await UpdateTickHandling(httpsClient,
+                  new TickToAdd
+                  {
+                      InstrumentId = 1,
+                      Close = (DecimalValue)5.6234m,
+                      Open = (DecimalValue)5.6225m,
+                      High = (DecimalValue)5.6238m,
+                      Low = (DecimalValue)5.6224m,
+                      Symbol = 2
+                  });
+              await GetTicksForQuota(httpsClient, 1);*/
             //await ClientStreaming(httpsClient, 1);
+
 
             Console.WriteLine("Press any key to close app...");
             Console.ReadLine();

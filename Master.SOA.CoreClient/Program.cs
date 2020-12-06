@@ -1,6 +1,8 @@
 ﻿using Grpc.Core;
+using Grpc.Core.Interceptors;
 using Grpc.Net.Client;
 using Master.SOA.CoreClient.Helpers;
+using Master.SOA.GrpcProtoLibrary.Interceptors.ClientSide;
 using Master.SOA.GrpcProtoLibrary.Protos.Auth;
 using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
 using Master.SOA.GrpcProtoLibrary.Protos.Health;
@@ -24,7 +26,8 @@ namespace Master.SOA.CoreClient
             GrpcChannel authChannel = GrpcChannel.ForAddress("https://localhost:56790");
             var httpsClient = new Auth.AuthClient(authChannel);
 
-            var healthChecker = new Health.HealthClient(channel);
+            var interceptorHttps = channel.Intercept(new HeaderLoggerInterceptor());
+            var healthChecker = new Health.HealthClient(interceptorHttps);
 
             string serviceName = "Ticker";
 

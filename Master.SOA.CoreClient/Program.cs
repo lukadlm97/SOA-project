@@ -6,28 +6,39 @@ using Master.SOA.GrpcProtoLibrary.Protos.Greeter;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
 using System;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Master.SOA.CoreClient
 {
     internal class Program
     {
+        private const string Address = "localhost:45679";
         private static async Task Main(string[] args)
         {
-           // GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
-           // var httpsClient = new Ticker.TickerClient(channel);
+           GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
+            var httpsClientTicker = new Ticker.TickerClient(channel);
 
             GrpcChannel authChannel = GrpcChannel.ForAddress("https://localhost:56790");
             var httpsClient = new Auth.AuthClient(authChannel);
 
-            var token = await httpsClient.UpdateUserRoleAsync(new UpdateRoleRequest
-            {
-                AdminUsername = "admin",
-                Role = "PremiumUser",
-                Username = "u1"
-            });
+            var reply = await httpsClient.LogInAsync(new LogInRequest { Username = "admin", Password = "admin" });
+            var replyUser = await httpsClient.LogInAsync(new LogInRequest { Username = "k1", Password = "k2" });
 
-            Console.WriteLine(token.Code+"   :   "+token.Message);
+            var tokenAdmin =
+                await Authenticate(reply.Role);
+
+            var tokenUser = await Authenticate(replyUser.Role);
+
+
+            Console.WriteLine(tokenAdmin);
+            Console.WriteLine(tokenUser);
+
+            await ClientStreaming(httpsClientTicker, 1, tokenUser);
+
+
+
             /*await UpdateTickHandling(httpsClient,
                 new TickToAdd
                 {
@@ -56,6 +67,27 @@ namespace Master.SOA.CoreClient
             }
 
             Console.WriteLine(reply.Message);
+        }
+
+        private static async Task<string> Authenticate(string role)
+        {
+            Console.WriteLine($"Authenticating as {Environment.UserName}...");
+
+            var httpClient = new HttpClient();
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri($"https://{Address}/generateJwtToken?role={HttpUtility.UrlEncode(role)}"),
+                Method = HttpMethod.Get,
+                Version = new Version(2, 0)
+            };
+
+            var tokenResponse = await httpClient.SendAsync(request);
+            tokenResponse.EnsureSuccessStatusCode();
+
+            var token = await tokenResponse.Content.ReadAsStringAsync();
+            Console.WriteLine("Successfully authenticated.");
+
+            return token;
         }
 
         async static Task HandleSingleCall(Ticker.TickerClient client,int id)
@@ -140,9 +172,13 @@ namespace Master.SOA.CoreClient
             }
         }
 
-        static async Task ClientStreaming(Ticker.TickerClient client,int symbolId)
+        static async Task ClientStreaming(Ticker.TickerClient client,int symbolId,string token)
         {
-            using(var call = client.ClientStreaming())
+            var header = new Metadata();
+            header.Add("Authorization", $"Bearer {token}");
+            var options = new CallOptions(header);
+
+            using (var call = client.ClientStreaming(options))
             {
                 for(int i = 0; i < 5; i++)
                 {

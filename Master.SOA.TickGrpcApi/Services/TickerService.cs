@@ -3,12 +3,16 @@ using Google.Protobuf.Collections;
 using Grpc.Core;
 using Master.SOA.BusinessLogic.Contracts;
 using Master.SOA.Domain.Models;
-using Master.SOA.GrpcProtoLibrary.Protos.Interprocess;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Master.SOA.TickGrpcApi.Services
@@ -19,12 +23,12 @@ namespace Master.SOA.TickGrpcApi.Services
         private readonly IMapper _mapper;
         private readonly ILogger<TickerService> _logger;
         private readonly IInstrumentService _instrumentService;
+        private readonly IAuthService _authService;
 
         public TickerService(IMapper mapper, IDataService<Tick> service, IInstrumentService instrumentService,
-            ILogger<TickerService> loggger, IMemoryCache memoryCache)
+            ILogger<TickerService> loggger, IMemoryCache memoryCache, IAuthService authService)
         {
-            (_mapper, _service, _instrumentService, _logger) = (mapper, service, instrumentService, loggger);
-            
+            (_mapper, _service, _instrumentService, _logger, _authService) = (mapper, service, instrumentService, loggger, authService);
         }
 
         public override async Task<TickReply> GetTick(TickSearchRequest request, ServerCallContext context)
@@ -167,6 +171,7 @@ namespace Master.SOA.TickGrpcApi.Services
             };
         }
 
+        [Authorize(Roles ="Admin")]
         public async override Task<TickChangesReply> ClientStreaming(IAsyncStreamReader<TickToAdd> requestStream, ServerCallContext context)
         {
             bool isAllCreated = true;

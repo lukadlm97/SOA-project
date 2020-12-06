@@ -16,6 +16,7 @@ service Ticker {
 	rpc UpdateTick(TickToAdd) returns (TickChangesReply);
 	rpc ClientStreaming(stream TickToAdd) returns (TickChangesReply);
 	rpc GetTickForSymbol(SymbolSearchRequest) returns (MultipleTicksReply);
+	rpc GetCredentials(CreadentialsRequest) returns (CreadentialsReply);
 }
 
 message MultipleTicksRequest{
@@ -83,6 +84,14 @@ message DecimalValue {
 message TickChangesReply{
   StatusCode code=1;
   string message=2;
+}
+
+message CreadentialsRequest{
+	string guidId = 1;
+}
+
+message CreadentialsReply{
+	string token = 1;
 }
 
 enum StatusCode{

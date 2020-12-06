@@ -26,5 +26,7 @@ namespace Master.SOA.TickGrpcApi.Services
                  Status = GrpcProtoLibrary.Protos.Interprocess.StatusCode.Error 
              };
         }
+
+
     }
 }

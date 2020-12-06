@@ -48,7 +48,7 @@ namespace Master.SOA.AuthGrpcApi.Services
 
             if (isSuccess)
             {
-                return Guid.NewGuid().ToString();
+                return users.FirstOrDefault(x => x.Username == obj.Username && x.Password == obj.Password)?.Role.Name;
             }
 
             return null;

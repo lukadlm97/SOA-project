@@ -36,7 +36,7 @@ message UpdateRoleRequest {
 
 // The response message containing the greetings.
 message LogInReply {
-  string guidId = 1;
+  string role = 1;
   StatusCode code = 2;
 }
 

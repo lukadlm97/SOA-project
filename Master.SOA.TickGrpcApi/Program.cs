@@ -29,6 +29,8 @@ namespace Master.SOA.TickGrpcApi
                         services.AddSingleton<IDataService<Tick>, TickService>();
                         services.AddSingleton<IDataRepository<TickDto>, TickRepository>();
                         services.AddSingleton<IInstrumentService, InstrumentService>();
+                        services.AddSingleton<IAuthRepository, AuthRepository>();
+                        services.AddSingleton<IAuthService, AuthService>();
                         services.AddAutoMapper(typeof(AutoMapperProfile));
                     });
                     webBuilder.UseStartup<Startup>();

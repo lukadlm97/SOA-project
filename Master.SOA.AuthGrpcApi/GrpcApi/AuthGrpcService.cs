@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Grpc.Core;
+using Grpc.Net.Client;
 using Master.SOA.AuthGrpcApi.Models.Domain;
 using Master.SOA.AuthGrpcApi.Services.Contracts;
 using Master.SOA.GrpcProtoLibrary.Protos.Auth;
+using Master.SOA.GrpcProtoLibrary.Protos.Interprocess;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace Master.SOA.AuthGrpcApi.GrpcApi
@@ -13,9 +16,15 @@ namespace Master.SOA.AuthGrpcApi.GrpcApi
         private readonly IAuthService _service;
         private readonly IMapper _mapper;
         private readonly ILogger<AuthGrpcService> _logger;
+        private readonly InterprocessCommunication.InterprocessCommunicationClient _client;
 
         public AuthGrpcService(IMapper mapper, IAuthService service, ILogger<AuthGrpcService> loggger)
-        => (_mapper, _service, _logger) = (mapper, service, loggger);
+        {
+            (_mapper, _service, _logger) = (mapper, service, loggger);
+            GrpcChannel channel = GrpcChannel.ForAddress("https://localhost:45679");
+            _client = new InterprocessCommunication.InterprocessCommunicationClient(channel);
+        }
+
 
         public async override Task<ChangeRoleReply> UpdateUserRole(UpdateRoleRequest request, ServerCallContext context)
         {
@@ -48,16 +57,18 @@ namespace Master.SOA.AuthGrpcApi.GrpcApi
                 return new LogInReply
                 {
                     Code = GrpcProtoLibrary.Protos.Auth.StatusCode.Error,
-                    GuidId = null
+                    Role = null
                 };
             }
 
-            //TODO say ticker that is login successfully
+            var guidId = Guid.NewGuid().ToString();
+
+            await _client.SayGuidAsync(new HelloRequest { Guid = guidId, Role = token });
 
             return new LogInReply
             {
                 Code = GrpcProtoLibrary.Protos.Auth.StatusCode.Success,
-                GuidId = token
+                Role = token
             };
         }
 

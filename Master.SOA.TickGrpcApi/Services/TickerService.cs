@@ -3,7 +3,9 @@ using Google.Protobuf.Collections;
 using Grpc.Core;
 using Master.SOA.BusinessLogic.Contracts;
 using Master.SOA.Domain.Models;
+using Master.SOA.GrpcProtoLibrary.Protos.Interprocess;
 using Master.SOA.GrpcProtoLibrary.Protos.Ticker;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +20,12 @@ namespace Master.SOA.TickGrpcApi.Services
         private readonly ILogger<TickerService> _logger;
         private readonly IInstrumentService _instrumentService;
 
-        public TickerService(IMapper mapper, IDataService<Tick> service, IInstrumentService instrumentService, ILogger<TickerService> loggger)
-        => (_mapper, _service, _instrumentService, _logger) = (mapper, service, instrumentService, loggger);
+        public TickerService(IMapper mapper, IDataService<Tick> service, IInstrumentService instrumentService,
+            ILogger<TickerService> loggger, IMemoryCache memoryCache)
+        {
+            (_mapper, _service, _instrumentService, _logger) = (mapper, service, instrumentService, loggger);
+            
+        }
 
         public override async Task<TickReply> GetTick(TickSearchRequest request, ServerCallContext context)
         {
